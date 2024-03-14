@@ -1,44 +1,24 @@
-pipeline
-{
-  agent any
-  stages
-  {
-    stage('ContinuousDownload')
+node('built-in') {
+    stage('continuousDownload')
     {
-      steps
-      {
-         git ' https://github.com/sireeshamaganti2/mymaven2.git'
-      }
+       git '  https://github.com/intelliqittrainings/maven.git'
     }
-    stage('ContinuousBuild')
+    stage('continuousBuild')
     {
-      steps
-      {
-          sh 'mvn package'
-      }
+        sh 'mvn package'
     }
-    stage('ContinuousDeployment')
+    stage('continuousDeployment')
     {
-      steps
-      {
-          deploy adapters: [tomcat9(credentialsId: 'd0a088fd-3d1d-47c6-90de-9cb34d77f17b', path: '', url: 'http://172.31.32.43:8080')], contextPath: 'testapp', war: '**/*.war'
-      }
+        deploy adapters: [tomcat9(credentialsId: 'd0a088fd-3d1d-47c6-90de-9cb34d77f17b', path: '', url: 'http://172.31.32.43:8080')], contextPath: 'testapp', war: '**/*.war'
     }
-    stage('ContinuousTesting')
+    stage('continuousTesting')
     {
-      steps
-      {
-          git '  https://github.com/intelliqittrainings/FunctionalTesting.git'
-       sh 'java -jar /home/ubuntu/.jenkins/workspace/DeclarativePipeline1/testing.jar'
-      }
+       git '  https://github.com/intelliqittrainings/FunctionalTesting.git'
+       sh 'java -jar /home/ubuntu/.jenkins/workspace/ScriptedPipeline1/testing.jar'
     }
-    stage('ContinuousDelivery')
+    stage('continuousDelivery')
     {
-      steps
-      {
-           deploy adapters: [tomcat9(credentialsId: 'd0a088fd-3d1d-47c6-90de-9cb34d77f17b', path: '', url: 'http://172.31.33.163:8080')], contextPath: 'prodapp', war: '**/*.war'
-      }
+        deploy adapters: [tomcat9(credentialsId: 'd0a088fd-3d1d-47c6-90de-9cb34d77f17b', path: '', url: 'http://172.31.33.163:8080')], contextPath: 'prodapp', war: '**/*.war'
     }
-  }
+    
 }
-
